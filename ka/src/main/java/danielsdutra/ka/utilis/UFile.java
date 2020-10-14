@@ -141,19 +141,35 @@ public class UFile {
 	 * @throws ExceptionUnknownOrder if unknown EnumOrder;
 	 */
 	public static List<String> listAll(String pathDir, Pattern pattern, EnumOrder enumOrder) throws ExceptionUnknownOrder {
-		List<String> list = listAll(pathDir);
+		List<String> listFiles = listAll(pathDir);
 		// ---
 		if ( enumOrder == EnumOrder.ASC ) {
-			Collections.sort(list);
+			Collections.sort(listFiles);
 			
 		} else if ( enumOrder == EnumOrder.DESC ) {
-			Collections.sort(list, Collections.reverseOrder());
+			Collections.sort(listFiles, Collections.reverseOrder());
 			
 		} else {
 			throw new ExceptionUnknownOrder();
 			
 		}
-		return list;
+		// ---
+		List<String> listResponse = new ArrayList<String>();
+		listResponse.clear();
+		for(String nameFile : listFiles) {
+			if ( pattern!= null ) {
+				boolean patternResponse = pattern.matcher(nameFile).find();
+				
+				if ( patternResponse ) {
+					listResponse.add(nameFile);
+					
+				}
+			} else {
+				listResponse.add(nameFile);
+				
+			}
+		}
+		return listResponse;
 	}
 	/**
 	 * Tells whether a link is related to a file or directory.
